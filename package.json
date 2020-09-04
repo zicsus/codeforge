@@ -1,0 +1,31 @@
+{
+  "name": "codeforge",
+  "version": "1.0.0",
+  "description": "Visual scripting with javascript",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron .",
+    "app:build": "webpack --mode=production",
+    "app:watch": "webpack --mode=development --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zicsus/codeforge.git"
+  },
+  "author": "Himanshu Mishra <zicsus@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zicsus/codeforge/issues"
+  },
+  "homepage": "https://github.com/zicsus/codeforge#readme",
+  "dependencies": {
+    "electron": "^10.1.1"
+  },
+  "devDependencies": {
+    "copy-webpack-plugin": "^5.0.3",
+    "size-plugin": "^2.0.1",
+    "terser-webpack-plugin": "^4.1.0",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
+  }
+}
