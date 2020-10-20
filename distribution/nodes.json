@@ -1,0 +1,99 @@
+[
+	{
+		"name": "Start",
+		"strict": true
+	},
+
+	{
+		"name": "Function",
+		"display_name": true,
+		"executable": true,
+		"arguments": true
+	},
+
+	{
+		"name": "If",
+		"executable": true,
+		"parameters": [ "condition" ],
+		"conditions": {
+			"true": {
+				"parameter": "condition",
+				"value": true
+			},
+			"false": {
+				"parameter": "condition",
+				"value": false
+			}
+		}
+	},
+
+	{
+		"name": "Print",
+		"executable": true,
+		"parameters": [ "value" ]
+	},
+
+	{
+		"name": "Variable",
+		"executable": true,
+		"parameter": [ "value" ]
+	},
+
+	{
+		"name": "Get"
+	},
+
+	{
+		"name": "Set",
+		"executable": true
+	},
+
+	{
+		"name": "Add",
+		"operation": "+",
+		"executable": true,
+		"parameters": [ "value1", "value2" ]
+	},
+
+	{
+		"name": "Subtract",
+		"operation": "-",
+		"executable": true,
+		"parameters": [ "value1", "value2" ]
+	},
+
+	{
+		"name": "Multiply",
+		"operation": "*",
+		"executable": true,
+		"parameters": [ "value1", "value2" ]
+	},
+
+	{
+		"name": "Divide",
+		"operation": "/",
+		"executable": true,
+		"parameters": [ "value1", "value2" ]
+	},
+
+	{
+		"name": "Modulas",
+		"operation": "%",
+		"executable": true,
+		"parameters": [ "value1", "value2" ]
+	},
+
+	{
+		"name": "For",
+		"executable": true,
+		"parameters": [ "start", "end", "step" ],
+		"conditions": { "execute": {} }
+	},
+
+	{
+		"name": "While",
+		"executable": true,
+		"parameters": [ "condition" ],
+		"conditions": { "execute": {} }
+	}
+]

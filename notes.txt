@@ -1,0 +1,10 @@
+Type of Nodes-
+
+1) Start Node
+2) Function Node
+3) Print Node
+4) If Node
+5) Variable - Get, Set
+6) Add, Subtract, Multiply, Divide, Modulas 
+7) For loop
+8) While loop

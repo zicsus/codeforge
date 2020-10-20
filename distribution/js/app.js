@@ -90,13 +90,377 @@
 /*!********************!*\
   !*** ./src/app.js ***!
   \********************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _utils_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils/element */ "./src/utils/element.js");
+/* harmony import */ var _utils_events__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utils/events */ "./src/utils/events.js");
+/* harmony import */ var _components_editor__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/editor */ "./src/components/editor.js");
+/* harmony import */ var _components_separator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/separator */ "./src/components/separator.js");
+/* harmony import */ var _components_toolbar__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/toolbar */ "./src/components/toolbar.js");
 
 
-console.log("hiii")
+
+
+
+
+const app = _utils_element__WEBPACK_IMPORTED_MODULE_0__["default"].create("<div class='app'></div>");
+
+let editor = null;
+let separator = null;
+let toolbar = null;
+
+function render()
+{
+	editor = _components_editor__WEBPACK_IMPORTED_MODULE_2__["default"].render();
+	separator = _components_separator__WEBPACK_IMPORTED_MODULE_3__["default"].render();
+	toolbar = _components_toolbar__WEBPACK_IMPORTED_MODULE_4__["default"].render();
+
+	app.appendChild(editor);
+	app.appendChild(separator);
+	app.appendChild(toolbar);
+
+	editor.style.width = `${window.innerWidth / 2}px`;
+	toolbar.style.width = `${ (window.innerWidth / 2) - 1 }px`;
+}
+
+render();
+document.body.appendChild(app);
+
+document.body.onmousemove = (e) => 
+{
+	_utils_events__WEBPACK_IMPORTED_MODULE_1__["default"].setMousePosition(e.pageX, e.pageY);
+	if (_utils_events__WEBPACK_IMPORTED_MODULE_1__["default"].getMovable())
+	{
+		const x = e.pageX;
+		const y = e.pageY;
+
+		if (x < 500) 
+		{
+			_utils_events__WEBPACK_IMPORTED_MODULE_1__["default"].setMovable(false);
+		}
+		else
+		{
+			editor.style.width = `${x}px`;
+			toolbar.style.width = `${window.innerWidth - x - 1}px`;
+		}
+
+	}
+}
+
+document.body.onmousedown = (e) => 
+{
+	if (e.target.id === "window_separate")
+	{
+		_utils_events__WEBPACK_IMPORTED_MODULE_1__["default"].setMovable(true);
+	}
+}
+
+document.body.onmouseup = (e) => 
+{
+	_utils_events__WEBPACK_IMPORTED_MODULE_1__["default"].setMovable(false);
+}
+
+
+
+/***/ }),
+
+/***/ "./src/components/editor.js":
+/*!**********************************!*\
+  !*** ./src/components/editor.js ***!
+  \**********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _utils_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/element */ "./src/utils/element.js");
+/* harmony import */ var _nodeMenu__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./nodeMenu */ "./src/components/nodeMenu.js");
+
+
+
+
+const state = {
+	mx: 0,
+	my: 0
+};
+
+let editor = null;
+let graph = null;
+let menu = null;
+
+function render()
+{
+	editor = _utils_element__WEBPACK_IMPORTED_MODULE_0__["default"].create("<div id='editor'></div>");
+	graph = _utils_element__WEBPACK_IMPORTED_MODULE_0__["default"].create("<div id='graph'></div>");
+	menu = _nodeMenu__WEBPACK_IMPORTED_MODULE_1__["default"].render();
+
+	graph.onmousedown = (e) => { menu.hide(); }
+	editor.onmouseup = (e) => { if (e.which === 3) menu.show(state.mx, state.my); }
+	editor.onmousemove = (e) => 
+	{
+		state.mx = e.clientX;
+		state.my = e.clientY;
+	}
+	
+	editor.appendChild(graph);
+	editor.appendChild(menu);
+
+	return editor;
+}	
+
+/* harmony default export */ __webpack_exports__["default"] = ({ render });
+
+/***/ }),
+
+/***/ "./src/components/nodeMenu.js":
+/*!************************************!*\
+  !*** ./src/components/nodeMenu.js ***!
+  \************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _utils_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/element */ "./src/utils/element.js");
+/* harmony import */ var _utils_nodeManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/nodeManager */ "./src/utils/nodeManager.js");
+
+
+
+
+let menu = null;
+
+function render() 
+{
+	menu = _utils_element__WEBPACK_IMPORTED_MODULE_0__["default"].create("<div class='node-menu'></div>");
+
+	const search = _utils_element__WEBPACK_IMPORTED_MODULE_0__["default"].create(`<div class="search"></div>`);
+	const searchInput = _utils_element__WEBPACK_IMPORTED_MODULE_0__["default"].create(`<input type="text" placeholder="Search"/>`);
+
+	searchInput.oninput = (e) => 
+	{
+		const result = _utils_nodeManager__WEBPACK_IMPORTED_MODULE_1__["default"].search(e.target.value.toLowerCase());
+		renderNodeList(ul, result);
+	}
+
+	const ul = _utils_element__WEBPACK_IMPORTED_MODULE_0__["default"].create(`<ul></ul>`);
+	renderNodeList(ul, _utils_nodeManager__WEBPACK_IMPORTED_MODULE_1__["default"].get());
+
+	menu.show = show.bind(menu);
+	menu.hide = hide.bind(menu);
+
+	search.appendChild(searchInput);
+	menu.appendChild(search);
+	menu.appendChild(ul);
+
+	return menu;
+}
+
+function renderNodeList(ul, nodes)
+{
+	ul.innerHTML = "";
+	for (const node of nodes)
+	{
+		const li = _utils_element__WEBPACK_IMPORTED_MODULE_0__["default"].create(`<li>${node.name}</li>`);
+		ul.appendChild(li);
+	}
+}
+
+function reset()
+{
+	const input = menu.querySelector("input");
+	input.value = "";
+	const ul = menu.querySelector("ul");
+	renderNodeList(ul, _utils_nodeManager__WEBPACK_IMPORTED_MODULE_1__["default"].get());
+}
+
+function show(mx, my)
+{
+	reset();
+	this.style.display = "block";
+
+	let x = mx, y = my;
+	const box = this.getBoundingClientRect();
+	const parentBox = this.parentElement.getBoundingClientRect();
+
+	if (x + box.width > parentBox.width) x = mx - box.width;
+	if (y + box.height > parentBox.height) y = my - box.height;
+
+	this.style.left = `${x}px`; 
+	this.style.top = `${y}px`; 
+}
+
+function hide()
+{
+	this.style.display = "none";
+}
+
+/* harmony default export */ __webpack_exports__["default"] = ({ render });
+
+/***/ }),
+
+/***/ "./src/components/separator.js":
+/*!*************************************!*\
+  !*** ./src/components/separator.js ***!
+  \*************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _utils_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/element */ "./src/utils/element.js");
+/* harmony import */ var _utils_events__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/events */ "./src/utils/events.js");
+
+
+
+
+function render()
+{
+	const separator = _utils_element__WEBPACK_IMPORTED_MODULE_0__["default"].create("<div class='separator'></div>");
+	const hover = _utils_element__WEBPACK_IMPORTED_MODULE_0__["default"].create("<div class='hover' id='window_separate'></div>");
+
+	separator.appendChild(hover);
+	return separator;
+}
+
+/* harmony default export */ __webpack_exports__["default"] = ({ render });
+
+/***/ }),
+
+/***/ "./src/components/toolbar.js":
+/*!***********************************!*\
+  !*** ./src/components/toolbar.js ***!
+  \***********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _utils_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/element */ "./src/utils/element.js");
+
+
+
+let toolbar = null;
+
+function render()
+{
+	toolbar = _utils_element__WEBPACK_IMPORTED_MODULE_0__["default"].create(`<div id="toolbar"></div>`);
+	return toolbar;
+}
+
+/* harmony default export */ __webpack_exports__["default"] = ({ render });
+
+/***/ }),
+
+/***/ "./src/nodes.json":
+/*!************************!*\
+  !*** ./src/nodes.json ***!
+  \************************/
+/*! exports provided: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, default */
+/***/ (function(module) {
+
+module.exports = JSON.parse("[{\"name\":\"Start\",\"strict\":true},{\"name\":\"Function\",\"display_name\":true,\"executable\":true,\"arguments\":true},{\"name\":\"If\",\"executable\":true,\"parameters\":[\"condition\"],\"conditions\":{\"true\":{\"parameter\":\"condition\",\"value\":true},\"false\":{\"parameter\":\"condition\",\"value\":false}}},{\"name\":\"Print\",\"executable\":true,\"parameters\":[\"value\"]},{\"name\":\"Variable\",\"executable\":true,\"parameter\":[\"value\"]},{\"name\":\"Get\"},{\"name\":\"Set\",\"executable\":true},{\"name\":\"Add\",\"operation\":\"+\",\"executable\":true,\"parameters\":[\"value1\",\"value2\"]},{\"name\":\"Subtract\",\"operation\":\"-\",\"executable\":true,\"parameters\":[\"value1\",\"value2\"]},{\"name\":\"Multiply\",\"operation\":\"*\",\"executable\":true,\"parameters\":[\"value1\",\"value2\"]},{\"name\":\"Divide\",\"operation\":\"/\",\"executable\":true,\"parameters\":[\"value1\",\"value2\"]},{\"name\":\"Modulas\",\"operation\":\"%\",\"executable\":true,\"parameters\":[\"value1\",\"value2\"]},{\"name\":\"For\",\"executable\":true,\"parameters\":[\"start\",\"end\",\"step\"],\"conditions\":{\"execute\":{}}},{\"name\":\"While\",\"executable\":true,\"parameters\":[\"condition\"],\"conditions\":{\"execute\":{}}}]");
+
+/***/ }),
+
+/***/ "./src/utils/element.js":
+/*!******************************!*\
+  !*** ./src/utils/element.js ***!
+  \******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+
+function create(text)
+{
+	const wrapper = document.createElement("div");
+	wrapper.innerHTML = text;
+	return wrapper.firstElementChild;
+}
+
+/* harmony default export */ __webpack_exports__["default"] = ({ create });
+
+/***/ }),
+
+/***/ "./src/utils/events.js":
+/*!*****************************!*\
+  !*** ./src/utils/events.js ***!
+  \*****************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+
+
+const state = {
+	mx: 0,
+	my: 0,
+	is_movable: false
+};
+
+function setMousePosition(x, y)
+{
+	state.mx = x;
+	state.my = y;
+}
+
+function getMousePosition()
+{
+	return { x: state.mx, y: state.my };
+}
+
+function setMovable(status) { state.is_movable = status; }
+function getMovable() { return state.is_movable; }
+
+/* harmony default export */ __webpack_exports__["default"] = ({ setMousePosition, getMousePosition, getMovable, setMovable });
+
+/***/ }),
+
+/***/ "./src/utils/nodeManager.js":
+/*!**********************************!*\
+  !*** ./src/utils/nodeManager.js ***!
+  \**********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _nodes_json__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../nodes.json */ "./src/nodes.json");
+var _nodes_json__WEBPACK_IMPORTED_MODULE_0___namespace = /*#__PURE__*/__webpack_require__.t(/*! ../nodes.json */ "./src/nodes.json", 1);
+
+
+
+const state = {
+	nodes: JSON.parse(JSON.stringify(_nodes_json__WEBPACK_IMPORTED_MODULE_0__))
+};
+
+function get() { return state.nodes };
+
+function add() 
+{
+
+}
+
+function search(text)
+{
+	const result = [];
+	for (const node of state.nodes)
+	{
+		if (node.name.toLowerCase().startsWith(text))
+		{
+			result.push(node);
+		}
+	}
+
+	return result;
+}
+
+/* harmony default export */ __webpack_exports__["default"] = ({ get, add, search });
 
 /***/ })
 

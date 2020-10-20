@@ -1,0 +1,17 @@
+
+
+#editor {
+	min-width: 500px;
+	height: 100%;
+	position: relative;
+	overflow: hidden;
+}
+
+#graph {
+	width: 2000px;
+	height: 2000px;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	z-index: 50;
+}
