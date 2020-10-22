@@ -3,9 +3,11 @@ import $ from '../utils/element';
 import Nodes from '../utils/nodeManager';
 
 let menu = null;
+let callback = null;
 
-function render() 
+function render(clb) 
 {
+	callback = clb;
 	menu = $.create("<div class='node-menu'></div>");
 
 	const search = $.create(`<div class="search"></div>`);
@@ -36,6 +38,12 @@ function renderNodeList(ul, nodes)
 	for (const node of nodes)
 	{
 		const li = $.create(`<li>${node.name}</li>`);
+		li.onclick = () => 
+		{
+			callback(node);
+			menu.hide();
+		} 
+
 		ul.appendChild(li);
 	}
 }

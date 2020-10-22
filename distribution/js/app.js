@@ -177,7 +177,11 @@ document.body.onmouseup = (e) =>
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/element */ "./src/utils/element.js");
-/* harmony import */ var _nodeMenu__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./nodeMenu */ "./src/components/nodeMenu.js");
+/* harmony import */ var _grid__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./grid */ "./src/components/grid.js");
+/* harmony import */ var _nodeMenu__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./nodeMenu */ "./src/components/nodeMenu.js");
+/* harmony import */ var _utils_nodeManager__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/nodeManager */ "./src/utils/nodeManager.js");
+
+
 
 
 
@@ -195,7 +199,10 @@ function render()
 {
 	editor = _utils_element__WEBPACK_IMPORTED_MODULE_0__["default"].create("<div id='editor'></div>");
 	graph = _utils_element__WEBPACK_IMPORTED_MODULE_0__["default"].create("<div id='graph'></div>");
-	menu = _nodeMenu__WEBPACK_IMPORTED_MODULE_1__["default"].render();
+
+	const grid = _grid__WEBPACK_IMPORTED_MODULE_1__["default"].render(2000, 2000);
+
+	menu = _nodeMenu__WEBPACK_IMPORTED_MODULE_2__["default"].render(onClickNode);
 
 	graph.onmousedown = (e) => { menu.hide(); }
 	editor.onmouseup = (e) => { if (e.which === 3) menu.show(state.mx, state.my); }
@@ -204,12 +211,77 @@ function render()
 		state.mx = e.clientX;
 		state.my = e.clientY;
 	}
-	
+		
+	graph.appendChild(grid);
 	editor.appendChild(graph);
 	editor.appendChild(menu);
 
 	return editor;
 }	
+
+function onClickNode(node)
+{
+	const nodeDiv = _utils_nodeManager__WEBPACK_IMPORTED_MODULE_3__["default"].create(node);
+
+
+
+	graph.appendChild(nodeDiv);
+}
+
+/* harmony default export */ __webpack_exports__["default"] = ({ render });
+
+/***/ }),
+
+/***/ "./src/components/grid.js":
+/*!********************************!*\
+  !*** ./src/components/grid.js ***!
+  \********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _utils_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils/element */ "./src/utils/element.js");
+
+
+
+const separation = 30;
+let canvas = null;
+
+function render(width, height)
+{
+	canvas = _utils_element__WEBPACK_IMPORTED_MODULE_0__["default"].create("<canvas></canvas");
+	canvas.width = width;
+	canvas.height = height;
+
+	const ctx = canvas.getContext("2d");
+	const xLines = Math.ceil(height / separation);
+	const yLines = Math.ceil(width / separation);
+
+	for (let i=0; i < xLines; i++)
+	{
+		ctx.beginPath();
+		ctx.lineWidth = 1 + ((i % 10) == 0);
+		ctx.moveTo(0, i * separation);
+		ctx.lineTo(width, i * separation);
+		ctx.strokeStyle = "rgba(255, 255, 255, 0.1)";
+		ctx.stroke();
+		ctx.closePath();
+	}
+
+	for (let j=0; j < yLines; j++)
+	{
+		ctx.beginPath();
+		ctx.lineWidth = 1 + ((j % 10) == 0);
+		ctx.moveTo(j * separation, 0);
+		ctx.lineTo(j * separation, height);
+		ctx.strokeStyle = "rgba(255, 255, 255, 0.1)";
+		ctx.stroke();
+		ctx.closePath();
+	}
+
+	return canvas;
+}
 
 /* harmony default export */ __webpack_exports__["default"] = ({ render });
 
@@ -231,9 +303,11 @@ __webpack_require__.r(__webpack_exports__);
 
 
 let menu = null;
+let callback = null;
 
-function render() 
+function render(clb) 
 {
+	callback = clb;
 	menu = _utils_element__WEBPACK_IMPORTED_MODULE_0__["default"].create("<div class='node-menu'></div>");
 
 	const search = _utils_element__WEBPACK_IMPORTED_MODULE_0__["default"].create(`<div class="search"></div>`);
@@ -264,6 +338,12 @@ function renderNodeList(ul, nodes)
 	for (const node of nodes)
 	{
 		const li = _utils_element__WEBPACK_IMPORTED_MODULE_0__["default"].create(`<li>${node.name}</li>`);
+		li.onclick = () => 
+		{
+			callback(node);
+			menu.hide();
+		} 
+
 		ul.appendChild(li);
 	}
 }
@@ -432,6 +512,8 @@ function getMovable() { return state.is_movable; }
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _nodes_json__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../nodes.json */ "./src/nodes.json");
 var _nodes_json__WEBPACK_IMPORTED_MODULE_0___namespace = /*#__PURE__*/__webpack_require__.t(/*! ../nodes.json */ "./src/nodes.json", 1);
+/* harmony import */ var _utils_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/element */ "./src/utils/element.js");
+
 
 
 
@@ -440,11 +522,6 @@ const state = {
 };
 
 function get() { return state.nodes };
-
-function add() 
-{
-
-}
 
 function search(text)
 {
@@ -460,7 +537,17 @@ function search(text)
 	return result;
 }
 
-/* harmony default export */ __webpack_exports__["default"] = ({ get, add, search });
+function create(node) 
+{
+	const nodeDiv = _utils_element__WEBPACK_IMPORTED_MODULE_1__["default"].create("<div class='node'></div>");
+
+	const header = _utils_element__WEBPACK_IMPORTED_MODULE_1__["default"].create("<div id='header'>Function</div>");
+
+	
+	return nodeDiv;
+}
+
+/* harmony default export */ __webpack_exports__["default"] = ({ get, create, search });
 
 /***/ })
 
