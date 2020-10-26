@@ -1,6 +1,7 @@
 'use strict';
 import $ from '../utils/element';
 import Nodes from '../utils/nodeManager';
+import Events from '../utils/events';
 
 let menu = null;
 let callback = null;
@@ -37,10 +38,12 @@ function renderNodeList(ul, nodes)
 	ul.innerHTML = "";
 	for (const node of nodes)
 	{
+		if (node.name === "Start") continue;
+		
 		const li = $.create(`<li>${node.name}</li>`);
 		li.onclick = () => 
 		{
-			callback(node);
+			callback(node, Events.getGraphMousePosition().x, Events.getGraphMousePosition().y);
 			menu.hide();
 		} 
 

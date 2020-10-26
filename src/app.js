@@ -3,6 +3,7 @@ import Events from './utils/events';
 import Editor from './components/editor';
 import Separator from './components/separator';
 import Toolbar from './components/toolbar';
+import NodeManager from './utils/nodeManager';
 
 const app = $.create("<div class='app'></div>");
 
@@ -12,7 +13,7 @@ let toolbar = null;
 
 function render()
 {
-	editor = Editor.render();
+	editor = Editor.render(NodeManager.get()[0]);
 	separator = Separator.render();
 	toolbar = Toolbar.render();
 
@@ -22,6 +23,8 @@ function render()
 
 	editor.style.width = `${window.innerWidth / 2}px`;
 	toolbar.style.width = `${ (window.innerWidth / 2) - 1 }px`;
+
+	Editor.loop();
 }
 
 render();

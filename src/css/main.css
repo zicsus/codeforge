@@ -8,6 +8,7 @@
 	outline: none;
 	list-style: none;
 	user-select: none;
+	font-family: arial;
 }
 
 body {
@@ -46,6 +47,10 @@ input {
 	padding: 0.5rem;
 	font: normal 14px Arial;
 	color: #fff;
+}
+
+.space {
+	flex: 1;
 }
 
 ::-webkit-scrollbar {

@@ -15,3 +15,77 @@
 	left: 0px;
 	z-index: 50;
 }
+
+#editor .node {
+	position: absolute;
+	top: 100px;
+	left: 100px;
+	width: 240px;
+	border-radius: 0.2rem;
+	background: #0c0c0e;
+	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.6);
+}
+
+#editor .node #header {
+	display: flex;
+	align-items: center;
+	padding: 0.5rem;
+	background: linear-gradient(135deg, rgba(106, 27, 154, 0.4), transparent);
+	cursor: grab;
+	border-top-right-radius: 0.2rem;
+	border-top-left-radius: 0.2rem;
+}
+
+#editor .node #header h1 {
+	color: white;
+	font: normal 16px Arial;
+}
+
+#editor .node #body {
+}
+
+#editor .node #body section {
+	display: flex;
+	align-items: center;
+	position: relative;
+	min-height: 36px;
+	padding: 0.5rem;
+}
+
+#editor .node #body section .pin {
+	transition: fill 0.2s ease-in-out;
+	cursor: pointer;
+	position: absolute;
+	left: -9px;
+}
+
+#editor .node #body section .pin svg {
+	color: #aaa;
+	fill: #aaa;
+	width: 12px;
+	height: 12px;
+	transition: fill 0.2s ease-in-out;
+}
+
+#editor .node #body section .pin.out {
+	right: -9px;
+	left: auto;
+}
+
+#editor .node #body section .pin.out svg {
+	width: 16px;
+	height: 16px;
+}
+
+#editor .node #body section .pin.active svg {
+	fill: white;
+	color: white;
+}
+
+#graph .line {
+	position: absolute;
+	height: 3px;
+	background: #aaa;
+	transform-origin: 0% 50%;
+	border-radius: 8rem;
+}
