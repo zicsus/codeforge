@@ -26,8 +26,6 @@ function getOffset(child, parentSelector, maxIterations)
     {
         if (iterations >= maxIterations || element.matches(parentSelector)) break;
 
-        console.log(element.tagName, element.offsetLeft, element.offsetTop);
-
         x += element.offsetLeft;
         y += element.offsetTop;
 
@@ -38,4 +36,26 @@ function getOffset(child, parentSelector, maxIterations)
     return { x, y };
 }
 
-export default { create, getOffset };
+function getParent(parentSelector, child, maxIterations)
+{
+	let parent = null;
+
+    let iterations = 0;
+    let element = child;
+    do 
+    {
+        if (iterations >= maxIterations) break;
+        if (element.matches(parentSelector))
+        { 
+            parent = element;
+            break;
+        }
+
+        iterations += 1;
+    } 
+    while (element = element.parentNode);
+
+    return parent;
+}
+
+export default { create, getOffset, getParent };

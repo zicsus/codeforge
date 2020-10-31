@@ -7,7 +7,8 @@ import Events from '../utils/events';
 
 const state = {
 	nodes: JSON.parse(JSON.stringify(defaultNodes)),
-	divs: []
+	divs: [],
+
 };
 
 function get() { return state.nodes };
