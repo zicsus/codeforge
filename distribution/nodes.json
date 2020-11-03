@@ -77,7 +77,7 @@
 	},
 
 	{
-		"name": "Modulas",
+		"name": "Modulo",
 		"operation": "%",
 		"executable": true,
 		"parameters": [ "value1", "value2" ]

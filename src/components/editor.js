@@ -14,6 +14,12 @@ const state = {
 		line: null,
 		x: 0,
 		y: 0
+	},
+	graph: {
+		pivot: { x: 0, y: 0 },
+		offset: { x: 0, y: 0 },
+		allow_move: false,
+		moved: false
 	}
 };
 
@@ -30,13 +36,27 @@ function render(node)
 
 	menu = NodeMenu.render(onClickNode);
 
-	graph.onmousedown = (e) => { menu.hide(); }
+	graph.onmousedown = (e) => 
+	{ 
+		menu.hide();
+		if (e.which === 3)
+		{
+			state.graph.allow_move = true;
+			state.graph.pivot = { x: state.mx, y: state.my };
+			state.graph.offset = { x: graph.offsetLeft, y: graph.offsetTop };
+		}  
+	}
 	graph.onmouseup = (e) => 
 	{
+		if (e.which === 3) 
+		{
+			state.graph.allow_move = false;
+			if (state.graph.offset.x !== graph.offsetLeft || state.graph.offset.y !== graph.offsetTop) state.graph.moved = true;
+		}
 		if (state.draw_line.status && state.draw_line.line)
 		{
 			const cls = e.target.getAttribute("class");
-			if (cls && cls.includes("pin") 
+			if (cls && e.target.matches(".pin:not(.out)")  
 				&& $.getParent(".node", state.draw_line.from, 5) !== $.getParent(".node", e.target, 5))
 			{
 				createConnection(e.target);
@@ -48,10 +68,33 @@ function render(node)
 	}
 	graph.onmousemove = (e) => 
 	{
-		Events.setGraphMousePosition(e.clientX, e.clientY);
+		Events.setGraphMousePosition(e.pageX - graph.offsetLeft, e.pageY - graph.offsetTop);
+		if (state.graph.allow_move)
+		{
+			const diffX = state.graph.pivot.x - state.mx;
+			const diffY = state.graph.pivot.y - state.my;
+
+			let left = state.graph.offset.x - diffX;
+			let top = state.graph.offset.y - diffY
+
+			if (left > 0) left = 0;
+			if (top > 0) top = 0;
+
+			graph.style.left = `${left}px`;
+			graph.style.top = `${top}px`;
+		}
 	}
 
-	editor.onmouseup = (e) => { if (e.which === 3) menu.show(state.mx, state.my); }
+	graph.onmouseout = (e) => 
+	{
+		state.graph.allow_move = false;
+	};
+
+	editor.onmouseup = (e) => 
+	{ 
+		if (e.which === 3 && !state.graph.moved) menu.show(state.mx, state.my);
+		state.graph.moved = false; 
+	}
 	editor.onmousemove = (e) => 
 	{
 		state.mx = e.clientX;
@@ -62,7 +105,7 @@ function render(node)
 	editor.appendChild(graph);
 	editor.appendChild(menu);
 
-	onClickNode(node, 100, 100);
+	onClickNode(node, 600, 600);
 
 	return editor;
 }	
@@ -110,6 +153,12 @@ function createConnection(inPin)
 		state.draw_line.from.line.remove();
 	}
 
+	if(inPin.line)
+	{
+		inPin.line.from = null;
+		inPin.line.remove();
+	}
+
 	const line = state.draw_line.line.cloneNode(true);
 	line.from = state.draw_line.from;
 	line.to = inPin;
@@ -151,14 +200,13 @@ function reDrawConnection(line, inPin, outPin)
 
 function loop()
 {
-
-	//console.log(Events.getGraphMousePosition().x, Events.getGraphMousePosition().y);
 	for (const div of NodeManager.getDivs())
 	{
 		if (div.movable.status)
 		{
 			let x = Events.getGraphMousePosition().x - div.movable.x;
 	        let y = Events.getGraphMousePosition().y - div.movable.y;
+
 	        if (x < 0) x = 0;
 	        if (y < 0) y = 0;
 
