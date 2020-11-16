@@ -3,5 +3,53 @@
 	width: 100%;
 	height: 100%;
 	display: flex;
-	align-items: center;
+	flex-direction: column;
 }
+
+#toolbar .header {
+	height: 40px;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+	display: flex; 
+	align-items: center;
+	justify-content: center;
+}
+
+#toolbar .header button {
+	height: 40px;
+	display: flex;
+	align-items: center;
+	background: rgba(255, 255, 255, 0.05);
+	padding: 0.5rem 1rem;
+	font: 16px Arial;
+	color: #0288d1;
+	cursor: pointer;
+	transition: color 0.2s ease-in-out, background 0.2s ease-in-out;
+}
+
+#toolbar .header button svg {
+	width: 18px;
+	height: 18px;
+	margin-right: 0.3rem;
+}
+
+#toolbar .header button:hover {
+	background: #0288d1;
+	color: white;
+}
+
+#toolbar pre {
+	user-select: text;
+	flex: 1;
+	color: white;
+	padding: 1rem;
+	background: #282a36;
+}
+
+#toolbar code {
+	user-select: text;
+}
+
+#toolbar code * {
+	user-select: text;
+}
+

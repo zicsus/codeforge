@@ -1,6 +1,6 @@
 'use strict';
 import $ from '../utils/element';
-import Nodes from '../utils/nodeManager';
+import Nodes from '../compiler/nodeManager';
 import Events from '../utils/events';
 
 let menu = null;

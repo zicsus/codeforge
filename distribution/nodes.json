@@ -1,18 +1,13 @@
 [
 	{
 		"name": "Start",
+		"type": "start",
 		"strict": true
 	},
 
 	{
-		"name": "Function",
-		"display_name": true,
-		"executable": true,
-		"arguments": true
-	},
-
-	{
 		"name": "If",
+		"type": "if",
 		"executable": true,
 		"parameters": [ "condition" ],
 		"conditions": {
@@ -29,27 +24,85 @@
 
 	{
 		"name": "Print",
+		"type": "print",
 		"executable": true,
 		"parameters": [ "value" ]
 	},
 
 	{
 		"name": "Variable",
+		"type": "variable",
 		"executable": true,
 		"parameter": [ "value" ]
 	},
 
 	{
-		"name": "Get"
+		"name": "Greater than '>'",
+		"type": "gt",
+		"operation": ">",
+		"executable": true,
+		"parameters": [ "value1", "value2" ]
 	},
 
 	{
-		"name": "Set",
-		"executable": true
+		"name": "Greater than or equal to '>='",
+		"type": "gte",
+		"operation": ">=",
+		"executable": true,
+		"parameters": [ "value1", "value2" ]
+	},
+
+	{
+		"name": "Less than '<'",
+		"type": "lt",
+		"operation": "<",
+		"executable": true,
+		"parameters": [ "value1", "value2" ]
+	},
+
+	{
+		"name": "Less than or equal to '<='",
+		"type": "lte",
+		"operation": "<=",
+		"executable": true,
+		"parameters": [ "value1", "value2" ]
+	},
+
+	{
+		"name": "Equal to '=='",
+		"type": "et",
+		"operation": "==",
+		"executable": true,
+		"parameters": [ "value1", "value2" ]
+	},
+
+	{
+		"name": "Unequal to '!='",
+		"type": "ut",
+		"operation": "!=",
+		"executable": true,
+		"parameters": [ "value1", "value2" ]
+	},
+
+	{
+		"name": "AND '&&'",
+		"type": "and",
+		"operation": "&&",
+		"executable": true,
+		"parameters": [ "value1", "value2" ]
+	},
+
+	{
+		"name": "OR '||'",
+		"type": "or",
+		"operation": "||",
+		"executable": true,
+		"parameters": [ "value1", "value2" ]
 	},
 
 	{
 		"name": "Add",
+		"type": "add",
 		"operation": "+",
 		"executable": true,
 		"parameters": [ "value1", "value2" ]
@@ -57,6 +110,7 @@
 
 	{
 		"name": "Subtract",
+		"type": "subtract",
 		"operation": "-",
 		"executable": true,
 		"parameters": [ "value1", "value2" ]
@@ -64,6 +118,7 @@
 
 	{
 		"name": "Multiply",
+		"type": "multiply",
 		"operation": "*",
 		"executable": true,
 		"parameters": [ "value1", "value2" ]
@@ -71,6 +126,7 @@
 
 	{
 		"name": "Divide",
+		"type": "divide",
 		"operation": "/",
 		"executable": true,
 		"parameters": [ "value1", "value2" ]
@@ -78,6 +134,7 @@
 
 	{
 		"name": "Modulo",
+		"type": "modulo",
 		"operation": "%",
 		"executable": true,
 		"parameters": [ "value1", "value2" ]
@@ -85,6 +142,7 @@
 
 	{
 		"name": "For",
+		"type": "for",
 		"executable": true,
 		"parameters": [ "start", "end", "step" ],
 		"conditions": { "execute": {} }
@@ -92,6 +150,7 @@
 
 	{
 		"name": "While",
+		"type": "while",
 		"executable": true,
 		"parameters": [ "condition" ],
 		"conditions": { "execute": {} }

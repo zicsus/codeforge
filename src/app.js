@@ -3,7 +3,7 @@ import Events from './utils/events';
 import Editor from './components/editor';
 import Separator from './components/separator';
 import Toolbar from './components/toolbar';
-import NodeManager from './utils/nodeManager';
+import NodeManager from './compiler/nodeManager';
 
 const app = $.create("<div class='app'></div>");
 

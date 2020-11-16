@@ -2,7 +2,7 @@
 import $ from '../utils/element';
 import Grid from './grid';
 import NodeMenu from './nodeMenu';
-import NodeManager from '../utils/nodeManager';
+import NodeManager from '../compiler/nodeManager';
 import Events from '../utils/events';
 
 const state = {
@@ -32,14 +32,14 @@ function render(node)
 	editor = $.create("<div id='editor'></div>");
 	graph = $.create("<div id='graph'></div>");
 
-	const grid = Grid.render(2000, 2000);
+	const grid = Grid.render(5000, 5000);
 
 	menu = NodeMenu.render(onClickNode);
 
 	graph.onmousedown = (e) => 
 	{ 
 		menu.hide();
-		if (e.which === 3)
+		if (e.which === 3 && e.target.tagName.toLowerCase() === "canvas")
 		{
 			state.graph.allow_move = true;
 			state.graph.pivot = { x: state.mx, y: state.my };

@@ -7,8 +7,8 @@
 	border: 0px;
 	outline: none;
 	list-style: none;
-	user-select: none;
 	font-family: arial;
+	user-select: none;
 }
 
 body {
