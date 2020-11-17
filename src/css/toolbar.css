@@ -12,6 +12,7 @@
 	display: flex; 
 	align-items: center;
 	justify-content: center;
+	padding: 0rem 0.9rem;
 }
 
 #toolbar .header button {
@@ -24,6 +25,15 @@
 	color: #0288d1;
 	cursor: pointer;
 	transition: color 0.2s ease-in-out, background 0.2s ease-in-out;
+	margin: 0rem 0.2rem;
+}
+
+#toolbar .header button.green {
+	color: #009688;
+}
+
+#toolbar .header button.red {
+	color: #e53935;
 }
 
 #toolbar .header button svg {
@@ -37,19 +47,39 @@
 	color: white;
 }
 
-#toolbar pre {
-	user-select: text;
+#toolbar .header button.green:hover {
+	background: #009688;
+}
+
+#toolbar .header button.red:hover {
+	background: #e53935;
+}
+
+#toolbar .code {	
 	flex: 1;
-	color: white;
 	padding: 1rem;
 	background: #282a36;
+	overflow-y: auto;
 }
 
-#toolbar code {
+#toolbar .code pre {
+	user-select: text;
+	color: white;
+}
+
+#toolbar .code code {
 	user-select: text;
 }
 
-#toolbar code * {
+#toolbar .code code * {
 	user-select: text;
+}
+
+#toolbar .terminal {
+	height: 300px;
+	background: black;
+	color: rgba(255, 255, 255, 0.8);
+	padding: 1rem;
+	overflow-y: auto;
 }
 

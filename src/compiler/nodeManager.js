@@ -70,6 +70,17 @@ function createPin(isOut, type)
 	return pin;
 }
 
+function clear()
+{
+	for (const nodeDiv of state.divs)
+	{
+		if (nodeDiv.node.type !== "start") remove(nodeDiv);
+	}
+
+	state.variables = [];
+	state.divs = [];
+}
+
 function remove(nodeDiv)
 {
 	if (nodeDiv.node.type === "variable")
@@ -527,4 +538,4 @@ function createWhile(nodeDiv)
 	nodeDiv.appendChild(body);
 }
 
-export default { get, create, search, getDivs };
+export default { get, create, search, getDivs, clear };

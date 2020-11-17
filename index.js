@@ -1,6 +1,6 @@
 const { app, BrowserWindow } = require('electron');
 
-require('electron-reload')(__dirname);
+//require('electron-reload')(__dirname);
 
 function createWindow () 
 {
@@ -10,10 +10,10 @@ function createWindow ()
         webPreferences: {
             nodeIntegration: true
         },
-        menu: false,
+        menu: false
     });
     win.removeMenu();
-    win.webContents.openDevTools();
+    win.maximize();
     win.loadFile(`distribution/index.html`);
 }
 

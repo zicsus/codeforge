@@ -40821,6 +40821,17 @@ function createPin(isOut, type)
 	return pin;
 }
 
+function clear()
+{
+	for (const nodeDiv of state.divs)
+	{
+		if (nodeDiv.node.type !== "start") remove(nodeDiv);
+	}
+
+	state.variables = [];
+	state.divs = [];
+}
+
 function remove(nodeDiv)
 {
 	if (nodeDiv.node.type === "variable")
@@ -41278,7 +41289,7 @@ function createWhile(nodeDiv)
 	nodeDiv.appendChild(body);
 }
 
-/* harmony default export */ __webpack_exports__["default"] = ({ get, create, search, getDivs });
+/* harmony default export */ __webpack_exports__["default"] = ({ get, create, search, getDivs, clear });
 
 /***/ }),
 
@@ -41776,6 +41787,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _compiler_compile__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../compiler/compile */ "./src/compiler/compile.js");
 /* harmony import */ var _compiler_nodeManager__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../compiler/nodeManager */ "./src/compiler/nodeManager.js");
 /* harmony import */ var _utils_svgs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../utils/svgs */ "./src/utils/svgs.js");
+/* harmony import */ var _space__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./space */ "./src/components/space.js");
+
 
 
 
@@ -41792,19 +41805,55 @@ function render()
 
 	const header = _utils_element__WEBPACK_IMPORTED_MODULE_1__["default"].create('<div class="header"></div>');
 	const compileBtn = _utils_element__WEBPACK_IMPORTED_MODULE_1__["default"].create(`<button>${_utils_svgs__WEBPACK_IMPORTED_MODULE_4__["default"].cpu} Compile</button>`);
-	
-	const pre = _utils_element__WEBPACK_IMPORTED_MODULE_1__["default"].create('<pre></pre>');
+	const saveBtn = _utils_element__WEBPACK_IMPORTED_MODULE_1__["default"].create(`<button class="green">${_utils_svgs__WEBPACK_IMPORTED_MODULE_4__["default"].save} Save As</button>`);
+	const resetBtn = _utils_element__WEBPACK_IMPORTED_MODULE_1__["default"].create(`<button class="red">${_utils_svgs__WEBPACK_IMPORTED_MODULE_4__["default"].rotate} Reset</button>`);
+
+	const codeDiv = _utils_element__WEBPACK_IMPORTED_MODULE_1__["default"].create("<div class='code'><pre></pre></div>");
 	const code = _utils_element__WEBPACK_IMPORTED_MODULE_1__["default"].create('<code></code>');
+
+	const terminalDiv = _utils_element__WEBPACK_IMPORTED_MODULE_1__["default"].create("<div class='terminal'><pre></pre></div>");
+	const result = _utils_element__WEBPACK_IMPORTED_MODULE_1__["default"].create("<code></code>");
+
+	let compiledCode = "";
 	compileBtn.onclick = () => 
 	{
-		const compiledCode = _compiler_compile__WEBPACK_IMPORTED_MODULE_2__["default"].compile(_compiler_nodeManager__WEBPACK_IMPORTED_MODULE_3__["default"].getDivs()[0]);
+		result.innerHTML = "";
+
+		compiledCode = _compiler_compile__WEBPACK_IMPORTED_MODULE_2__["default"].compile(_compiler_nodeManager__WEBPACK_IMPORTED_MODULE_3__["default"].getDivs()[0]);
 		code.innerHTML = highlight_js__WEBPACK_IMPORTED_MODULE_0___default.a.highlight('javascript', compiledCode).value;
+
+		const log = console.log.bind(console);
+		console.log = (output) => 
+		{
+			result.innerHTML = `${result.innerHTML}> ${output}\n`;
+		}
+
+		eval(compiledCode);
+		console.log = log;
 	}
 
-	pre.appendChild(code);
+	saveBtn.onclick = () => 
+	{
+		const a = _utils_element__WEBPACK_IMPORTED_MODULE_1__["default"].create(`<a href='data:text/plain;charset=utf-8,${encodeURIComponent(compiledCode)}' download='code.js'></a>`);
+		a.click();
+	}
+
+	resetBtn.onclick = () => 
+	{
+		_compiler_nodeManager__WEBPACK_IMPORTED_MODULE_3__["default"].clear();
+		code.innerHTML = "";
+		result.innerHTML = "";
+	}
+
+	codeDiv.querySelector("pre").appendChild(code);
+	terminalDiv.querySelector("pre").appendChild(result);
 	header.appendChild(compileBtn);
+	header.appendChild(Object(_space__WEBPACK_IMPORTED_MODULE_5__["default"])());
+	header.appendChild(saveBtn);
+	header.appendChild(resetBtn);
 	toolbar.appendChild(header);
-	toolbar.appendChild(pre);
+	toolbar.appendChild(codeDiv);
+	toolbar.appendChild(terminalDiv);
 
 	return toolbar;
 }
@@ -41966,7 +42015,11 @@ const circle = `<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentC
 
 const cpu = '<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line></svg>';
 
-/* harmony default export */ __webpack_exports__["default"] = ({ play, circle, cpu });
+const save = '<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>';
+
+const rotate = '<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>';
+
+/* harmony default export */ __webpack_exports__["default"] = ({ play, circle, cpu, save, rotate });
 
 /***/ }),
 
